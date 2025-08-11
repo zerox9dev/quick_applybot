@@ -1,0 +1,320 @@
+{
+  "name": "CV Bot - AI помощник для откликов на вакансии",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "2da26381-8532-429b-9b3a-851d2eab4656",
+      "name": "Входящее сообщение Telegram",
+      "webhookId": "b71c7723-705a-4a23-b949-0600a25c47d8",
+      "credentials": {
+        "telegramApi": {
+          "id": "H90k4C1ugQYoUjaj",
+          "name": "@quick_applybot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.message.text }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "ru,en;q=0.9"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "max-age=0"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "document"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "navigate"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "none"
+            },
+            {
+              "name": "Sec-Fetch-User",
+              "value": "?1"
+            },
+            {
+              "name": "Upgrade-Insecure-Requests",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?1"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Android\""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        16,
+        0
+      ],
+      "id": "34303d1c-f0df-473f-996b-9df3c03fdd6e",
+      "name": "Загрузка страницы вакансии"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=ВАКАНСИЯ:\nНазвание: {{ $json.title }}\nКомпания: {{ $json.company }}\nОписание: {{ $json.description }}\nЗарплата: {{ $json.salary }}\n\nСоздай отклик на украинском языке.",
+        "options": {
+          "systemMessage": "=# БАЗА ЗНАНИЙ - VADYM PRODUCT DESIGNER CV\n\n## ОСНОВНАЯ ИНФОРМАЦИЯ\n- Имя: Vadym\n- Роль: Product Designer \n- Опыт: 6+ лет\n- Локация: Украина (remote/гибрид)\n\n## ОПЫТ РАБОТЫ\n### Product Designer | FreelanceHunt | Март 2023 – Декабрь 2024\n- Работал в команде с Product Manager над полным редизайном subscription платформы (1M+ пользователей)\n- Вел проект от user research до implementation совместно с разработчиками\n- Создал Design System и Component Library с нуля для всех web/mobile экранов\n- Анализировал пользователей через Hotjar и работал с метриками GA4/Amplitude\n\n### Freelance Product Designer | 2019-2024\n**Holyheld** (Fintech) - Web3 debit card platform (Toyota Ventures backed, $100M+ транзакций)\n**Lotos.io** (DeFi) - Crypto analytics platform (1.5M+ smart contracts)\n**mou.today** (HealthTech) - Medical services platform\n**Другие:** 30+ digital продуктов (e-commerce, SaaS, mobile apps)\n\n## ТЕХНИЧЕСКИЕ НАВЫКИ\n**Design:** Figma (эксперт), User Research, Prototyping, Design Systems\n**Analytics:** Google Analytics 4, Amplitude, Hotjar, A/B Testing\n**Development:** Python, n8n automation, AI-tools\n**AI-Enhanced Workflow:** С 2023 года использует AI для ускорения процессов\n\n## ДОМЕНЫ ОПЫТА\n- Fintech & DeFi, Subscription платформы, E-commerce, HealthTech, Mobile/Web\n\n## ЯЗЫКИ\n- Украинский (родной), Русский (свободно), Английский (upper-intermediate), Польский (разговорный)\n\nИНСТРУКЦИЯ: Анализируй вакансию и создавай краткий отклик (100-150 слов) на украинском языке, подбирая релевантный опыт из базы знаний."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        384,
+        0
+      ],
+      "id": "89726707-917c-47d4-866c-30ad3b9a5366",
+      "name": "Генерация отклика AI"
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        384,
+        208
+      ],
+      "id": "44cb3716-cb31-48cc-bab2-073c91172f1b",
+      "name": "LLM OpenRouter",
+      "credentials": {
+        "openRouterApi": {
+          "id": "IfRRzVZj2Oj6SjG2",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+      "chatId": "={{ $('Входящее сообщение Telegram').item.json.message.from.id }}",
+        "text": "=<code>{{ $json.output }}</code>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        784,
+        0
+      ],
+      "id": "c478fbba-8d68-4753-a3ce-c7e917c1583b",
+      "name": "Отправка отклика",
+      "webhookId": "2f22a0f7-bacc-4e61-b953-d6a7602b8877",
+      "credentials": {
+        "telegramApi": {
+          "id": "H90k4C1ugQYoUjaj",
+          "name": "@quick_applybot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Входные данные\nconst items = $input.all();\nconst htmlContent = items[0].json.data;\n\n// Ищем JSON-LD\nconst regex = /<script type=\"application\\/ld\\+json\">(.*?)<\\/script>/s;\nconst match = htmlContent.match(regex);\n\nif (match && match[1]) {\n  try {\n    const jobData = JSON.parse(match[1]);\n    \n    // Декодируем unicode в description\n    const cleanDescription = jobData.description\n      .replace(/\\\\u([0-9a-fA-F]{4})/g, (match, p1) => String.fromCharCode(parseInt(p1, 16)))\n      .replace(/\\\\n/g, '\\n')\n      .replace(/\\\\/g, '');\n    \n    return [{\n      json: {\n        title: jobData.title || 'No title',\n        description: cleanDescription,\n        salary: `${jobData.baseSalary?.value?.minValue || 'N/A'}-${jobData.baseSalary?.value?.maxValue || 'N/A'} ${jobData.baseSalary?.currency || 'USD'}`,\n        company: jobData.hiringOrganization?.name || 'Unknown',\n        location: jobData.applicantLocationRequirements?.address?.addressRegion || 'Remote'\n      }\n    }];\n  } catch (error) {\n    return [{ json: { error: 'Parse error: ' + error.message } }];\n  }\n} else {\n  return [{ json: { error: 'No job data found' } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        0
+      ],
+      "id": "a8f18589-a57b-4479-82c5-4dcbe176c808",
+      "name": "Парсинг JSON-LD"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d793a2e0-9565-40f6-b46c-e5e602061639",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -176,
+        208
+      ],
+      "id": "cf0a93dd-a987-4990-a740-2147b60ed09b",
+      "name": "Проверка команды /start"
+    },
+    {
+      "parameters": {
+      "chatId": "={{ $('Входящее сообщение Telegram').item.json.message.chat.id }}",
+        "text": "=🤖 <b>CV Bot</b> - твій AI помічник для вакансій!\n\n📝 <b>Що я вмію:</b>\n- Аналізую вакансії по посиланню\n- Підбираю релевантний досвід з CV  \n- Генерую персоналізований відгук за 30 секунд\n\n⚡ <b>Як користуватися:</b>\n1. Надішли посилання на вакансію (djinni.co, work.ua, robota.ua)\n2. Отримай готовий відгук\n3. Скопіюй і відправ роботодавцю\n\n🎯 <b>Приклад:</b>\nПросто вставь: https://djinni.co/jobs/123456\n\nДавай спробуємо! 🚀",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        208
+      ],
+      "id": "c78268fe-1b4b-468d-b477-17b8b286dffa",
+      "name": "Отправка приветствия",
+      "webhookId": "252071c5-a99f-4822-8557-99d76131b41a",
+      "credentials": {
+        "telegramApi": {
+          "id": "H90k4C1ugQYoUjaj",
+          "name": "@quick_applybot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Входящее сообщение Telegram": {
+      "main": [
+        [
+          {
+            "node": "Проверка команды /start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Загрузка страницы вакансии": {
+      "main": [
+        [
+          {
+            "node": "Парсинг JSON-LD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM OpenRouter": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Генерация отклика AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Генерация отклика AI": {
+      "main": [
+        [
+          {
+            "node": "Отправка отклика",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Парсинг JSON-LD": {
+      "main": [
+        [
+          {
+            "node": "Генерация отклика AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Проверка команды /start": {
+      "main": [
+        [
+          {
+            "node": "Отправка приветствия",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Загрузка страницы вакансии",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a7b19269-eb65-460b-a530-2193bb2b5dbd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3cccf3409e86b33b2a79f99fa866096ec6b0257f65a60fa3424765d498ebb729"
+  },
+  "id": "ELG7yd5XW9hZdnV0",
+  "tags": []
+}

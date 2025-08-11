@@ -1,0 +1,45 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node (если будет использоваться)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env
+.env
+.env.local
+.env.*.local
+*.env
+
+# n8n локальные данные/БД/бэкапы
+.n8n/
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+backups/
+.backups/
+
+# Логи/кеш
+logs/
+*.log
+*.log.*
+.cache/
+
+# Сборки/временные
+build/
+dist/
+coverage/
+.tmp/
+tmp/
+temp/
+
+# IDE/Editor
+.vscode/
+.idea/
+*.code-workspace
